@@ -1,0 +1,54 @@
+@page "/Child/Create"
+@using Microsoft.AspNetCore.Components
+@using WebAPI.Models
+@using Blazor.Services
+
+@inject NavigationManager navigation
+@inject IChildService childService;
+
+<h3>Create Child</h3>
+
+
+<EditForm Model="@newChild" OnValidSubmit="@AddNewChild">
+
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label for="firstName" class="form-check-label">Name </label>
+            <InputText id="firstName" class="form-control" placeholder="George" @bind-Value="newChild.Name"/>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="lastName" class="form-check-label">Age</label>
+            <InputNumber id="lastName" class="form-control" placeholder="Black" @bind-Value="newChild.Age"/>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="job" class="form-check-label">Gender</label>
+            <InputText id="job" class="form-control" placeholder="Student intern" @bind-Value="newChild.Gender"/>
+        </div>
+    </div>
+
+    <DataAnnotationsValidator/> <ValidationSummary/>
+    <div class="form-row">
+        <p class="actions">
+            <button class="btn btn-outline-dark" type="submit">Create</button>
+        </p>
+    </div>
+</EditForm>
+
+@code {
+    private Child newChild = new Child();
+
+
+    private async Task AddNewChild()
+    {
+        try
+        {
+            await childService.AddChildAsync(newChild);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("adding not sucessfull");
+        }
+        navigation.NavigateTo("/");
+    }
+
+}

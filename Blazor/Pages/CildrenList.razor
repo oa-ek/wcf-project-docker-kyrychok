@@ -1,0 +1,177 @@
+@page "/"
+@page "/CildrenList"
+@using WebAPI.Models
+@using Blazor.Services
+
+@inject IToyService toyService
+@inject NavigationManager navigation
+@inject IChildService childService;
+
+<h3>CildrenList</h3>
+<div>
+<button @onclick="@AddChild">
+    Add new child
+</button>
+<button @onclick="@AddToy">
+    Add new toy
+</button>
+</div>
+<p>
+    Filter children by gender: <input type="text" @oninput="@((arg) => FilterByGender(arg))" style="width:250px"/>
+</p>
+
+<p>
+    Filter by favourite: <select class="form-control selectpicker" @onchange="@((arg) => FilterByFavourites(arg))" style="width:100px">
+        <option>Both</option> <option>False</option> <option>True</option>
+    </select>
+</p>
+
+
+@if (children == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else if (!children.Any())
+{
+    <p>
+        <em>No children. Please add some.</em>
+    </p>
+}
+@foreach (var item in childrenToShow)
+{
+    <div>
+        <p>@item.Name is a @item.Age year old @item.Gender. Their toys include:</p>
+
+        @if (item.Toys == null)
+        {
+            <p>
+                <em>Loading...</em>
+            </p>
+        }
+        else if (!item.Toys.Any())
+        {
+            <p>
+                <em>No toys are in this list. Please add some.</em>
+            </p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>Toy Name</td>
+                    <td>Color</td>
+                    <td>Is Favourite?</td>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var childsToy in item.Toys)
+                {
+                    <tr>
+                        <td>@childsToy.Name</td>
+                        <td>@childsToy.Color</td>
+                        <td>@childsToy.IsFavourite</td>
+
+                        <td>
+                            <button @onclick="@(() => DeleteToy(item, childsToy.Id))">
+                                <i class="oi oi-trash" style="color:red"/>
+                            </button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+    </div>
+}
+
+@code
+{
+    private List<Child> children = new List<Child>();
+    private List<Child> childrenToShow = new List<Child>();
+    
+    private List<Toy> toys = new List<Toy>();
+    private List<Toy> toysToShow = new List<Toy>();
+
+    private string? filterByGender;
+    private bool? onlyFavourites;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        children = (await childService.GetChildrenAsync()).ToList();
+        childrenToShow = children;
+        
+        toys = (await toyService.GetToysAsync()).ToList();
+        toysToShow = toys;
+        
+        
+
+    // children = FamiliesData.GetChildren();
+    // children = await FamiliesData.GetChildrenAsync();
+        await base.OnInitializedAsync();
+    }
+
+    private void FilterByGender(ChangeEventArgs changeEventArgs)
+    {
+        filterByGender = null;
+        try
+        {
+            filterByGender = changeEventArgs.Value.ToString();
+        }
+        catch (Exception e)
+        {
+        }
+        ExecuteFilterChildren();
+    }
+
+    private void ExecuteFilterChildren()
+    {
+    childrenToShow = children.Where(child =>
+            (filterByGender != null && child.Gender.ToLower().Contains(filterByGender.ToLower()) || filterByGender == null))
+            .ToList();
+    }
+
+    private void FilterByFavourites(ChangeEventArgs arg)
+    {
+        
+    }
+
+    private void ExecuteFilterToys()
+    {
+        
+    }
+
+
+    private Task FilterByTitle(ChangeEventArgs changeEventArgs)
+    {
+        throw new NotImplementedException();
+    }
+
+    private async Task DeleteToy(Child child, int childToyId)
+    {
+        try
+        {
+            child.Toys.First(t => t.Id == childToyId);
+            toyService.DeleteToyAsync(childToyId);
+            await OnInitializedAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("wasnt able to remove toy");
+        }
+    }
+
+    private void AddChild()
+    {
+        navigation.NavigateTo("/Child/Create");
+    }
+
+    private void AddToy()
+    {
+        navigation.NavigateTo("/toy/create");
+    }
+}
+

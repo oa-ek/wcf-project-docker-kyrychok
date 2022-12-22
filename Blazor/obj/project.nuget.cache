@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "Sne1Aj04+voeYcwXxhbn4em0GMVH8Id9Erk7I/IrOmiXFJ/35OosSOE6mOM+3kuN9umACNGM6JY+hApL1jDYSA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Юля\\Desktop\\Kindergarden-toy-manager-main\\Blazor\\Blazor.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Юля\\.nuget\\packages\\microsoft.data.sqlite\\6.0.1\\microsoft.data.sqlite.6.0.1.nupkg.sha512",
+    "C:\\Users\\Юля\\.nuget\\packages\\microsoft.data.sqlite.core\\6.0.1\\microsoft.data.sqlite.core.6.0.1.nupkg.sha512",
+    "C:\\Users\\Юля\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.0.6\\sqlitepclraw.bundle_e_sqlite3.2.0.6.nupkg.sha512",
+    "C:\\Users\\Юля\\.nuget\\packages\\sqlitepclraw.core\\2.0.6\\sqlitepclraw.core.2.0.6.nupkg.sha512",
+    "C:\\Users\\Юля\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.0.6\\sqlitepclraw.lib.e_sqlite3.2.0.6.nupkg.sha512",
+    "C:\\Users\\Юля\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.0.6\\sqlitepclraw.provider.e_sqlite3.2.0.6.nupkg.sha512",
+    "C:\\Users\\Юля\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512"
+  ],
+  "logs": []
+}

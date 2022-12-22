@@ -1,0 +1,100 @@
+@page "/toy/create"
+@using Microsoft.AspNetCore.Components
+@using WebAPI.Models
+@using Blazor.Services
+
+@inject IToyService toyService
+@inject NavigationManager navigation
+@inject IChildService childService;
+
+<h3>Create a Toy</h3>
+
+
+<EditForm Model="@newToy" OnValidSubmit="@AddNewToy">
+
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label for="Name" class="form-check-label">Name </label>
+            <InputText id="Name" class="form-control" placeholder="George" @bind-Value="newToy.Name"/>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="Color" class="form-check-label">Color</label>
+            <InputText id="Color" class="form-control" placeholder="Black" @bind-Value="newToy.Color"/>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="Condition" class="form-check-label">Condition</label>
+            <InputText id="Condition" class="form-control" placeholder="Student intern" @bind-Value="newToy.Condition"/>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Is a Favourite</label>
+            <InputCheckbox @bind-Value="newToy.IsFavourite"/>
+        </div>
+    </div>
+    <div class="form-row">
+        @*<div class="form-group col-md-6">
+            <label for="ChildID" class="form-check-label">Child ID</label>
+            <InputNumber id="ChildID" class="form-control" placeholder="" @bind-Value="childId"/>
+        </div>*@
+
+        
+        @*<div class="col-md-6">
+            Child ID
+            <InputSelect id="selectedChild" @bind-value="selectedChild">
+                @foreach (var item in availableChildren)
+                {
+                    <option value="@item"> @item.Id </option>
+                }
+            </InputSelect>
+        </div>*@
+    </div>
+    
+    <div class="form-group row">
+            <label for="selectedChild" class="col-sm-2 col-form-label">
+                select child
+            </label>
+            <div class="col-sm-10">
+                <InputSelect id="department" @bind-Value="selectedChild" class="form-control">
+                    @foreach (var item in availableChildren)
+                    {
+                        <option value="@item.Id">@item.Id</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+
+    <DataAnnotationsValidator/> <ValidationSummary/>
+    <div class="form-row">
+        <p class="actions">
+            <button class="btn btn-outline-dark" type="submit">Create</button>
+        </p>
+    </div>
+</EditForm>
+
+@code {
+    private Toy newToy = new Toy();
+    private int childId;
+
+    public string selectedChild { get; set; }
+    public List<Child> availableChildren { get; set; } = new List<Child>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        availableChildren = (await childService.GetChildrenAsync()).ToList();
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task AddNewToy()
+    {
+        try
+        {
+            await toyService.AddToyAsync(newToy, Int32.Parse(selectedChild));
+            navigation.NavigateTo("/");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("adding not sucessfull");
+        }
+    }
+
+}
